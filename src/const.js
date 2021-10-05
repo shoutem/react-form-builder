@@ -12,6 +12,7 @@ export const PROPERTY_FORMATS = {
   SINGLE_LINE: 'single-line',
   MULTI_LINE: 'multi-line',
   HTML: 'html',
+  COLOR: 'color',
   URI: 'uri',
   NUMBER: 'number',
   INTEGER: 'integer',

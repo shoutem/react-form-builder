@@ -12,3 +12,4 @@ export { default as EntityReferenceReduxFormElement } from './entity-reference-r
 export { default as BooleanReduxFormElement } from './boolean-redux-form-element';
 export { default as SectionForm } from './section-form';
 export { default as FormContainer } from './form-container';
+export { default as ColorReduxFormElement } from './color-redux-form-element';

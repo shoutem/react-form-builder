@@ -15,6 +15,7 @@ import {
   TextAreaReduxFormElement,
   EntityReferenceReduxFormElement,
   BooleanReduxFormElement,
+  ColorReduxFormElement,
   FormContainer,
   SectionForm,
 } from '../components';
@@ -204,6 +205,18 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       unsplashAccessKey: options.unsplashAccessKey,
     };
     return resolveReactComponent(ArrayFormElement, props);
+  }
+
+  if (
+    schemaProperty.type === PROPERTY_TYPES.STRING &&
+    schemaProperty.format === PROPERTY_FORMATS.COLOR
+  ) {
+    const props = {
+      elementId: propertyKey,
+      field: propertyField,
+      name: schemaProperty.title,
+    };
+    return resolveReactComponent(ColorReduxFormElement, props);
   }
 
   if (schemaProperty.type === PROPERTY_TYPES.STRING) {
