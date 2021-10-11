@@ -18,17 +18,8 @@ export default function ImageUploadPlaceholder({ className, width, height }) {
 }
 
 ImageUploadPlaceholder.propTypes = {
-  /**
-   * Additional classes to apply
-   */
   className: PropTypes.string,
-  /**
-   * Placeholder width
-   */
   width: PropTypes.string,
-  /**
-   * Placeholder height
-   */
   height: PropTypes.string,
 };
 

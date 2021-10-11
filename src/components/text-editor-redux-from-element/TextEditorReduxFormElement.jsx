@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import autoBindReact from 'auto-bind/react';
 import classNames from 'classnames';
-import i18next from 'i18next';
 import _ from 'lodash';
 import PropTypes from 'prop-types';
 import { HelpBlock, ControlLabel, FormGroup } from 'react-bootstrap';
 import { RichTextEditor } from '@shoutem/react-web-ui';
-import { fieldInError } from '../services';
+import t from '../../i18n';
 import LOCALIZATION from '../../localization';
+import { fieldInError } from '../services';
 import './style.scss';
 
 export default class TextEditorReduxFormElement extends Component {
@@ -18,24 +18,16 @@ export default class TextEditorReduxFormElement extends Component {
     helpText: PropTypes.string,
     className: PropTypes.string,
     unsplashAccessKey: PropTypes.string,
+    localization: PropTypes.object,
   };
 
   constructor(props) {
     super(props);
     autoBindReact(this);
-
-    const { field } = props;
-    const initialValue = _.get(field, 'value', '');
-
-    this.state = {
-      value: initialValue,
-    };
   }
 
   handleChange(value) {
     const { field } = this.props;
-
-    this.setState({ value });
     field.onChange(value.toString('html'));
   }
 
@@ -47,36 +39,46 @@ export default class TextEditorReduxFormElement extends Component {
       helpText,
       className,
       unsplashAccessKey,
+      localization,
       ...otherProps
     } = this.props;
-    const { value } = this.state;
+    const { value } = _.get(field, 'value', '');
 
     const classes = classNames('text-editor-redux-from-element', className);
     const isError = fieldInError(field);
     const helpBlockText = isError ? field.error : helpText;
     const imagePickerLocalization = {
-      footerText: i18next.t(LOCALIZATION.IMAGE_PICKER_FOOTER_TEXT),
-      insertButtonTextSingular: i18next.t(
+      footerText: t(LOCALIZATION.IMAGE_PICKER_FOOTER_TEXT, localization),
+      insertButtonTextSingular: t(
         LOCALIZATION.IMAGE_PICKER_INSERT_BUTTON_TEXT_SINGULAR,
+        localization,
       ),
-      insertButtonTextPlural: i18next.t(
+      insertButtonTextPlural: t(
         LOCALIZATION.IMAGE_PICKER_INSERT_BUTTON_TEXT_PLURAL,
+        localization,
       ),
-      invalidUnsplashKeyText: i18next.t(
+      invalidUnsplashKeyText: t(
         LOCALIZATION.IMAGE_PICKER_INVALID_ACCESS_KEY_TEXT,
+        localization,
       ),
-      modalTitle: i18next.t(LOCALIZATION.IMAGE_PICKER_MODAL_TITLE),
-      imagePreviewOnText: i18next.t(LOCALIZATION.IMAGE_PICKER_ON_TEXT),
-      imagePreviewPhotoByText: i18next.t(
+      modalTitle: t(LOCALIZATION.IMAGE_PICKER_MODAL_TITLE, localization),
+      imagePreviewOnText: t(LOCALIZATION.IMAGE_PICKER_ON_TEXT, localization),
+      imagePreviewPhotoByText: t(
         LOCALIZATION.IMAGE_PICKER_PHOTO_BY_TEXT,
+        localization,
       ),
-      imagePreviewUnsplashText: i18next.t(
+      imagePreviewUnsplashText: t(
         LOCALIZATION.IMAGE_PICKER_UNSPLASH_TEXT,
+        localization,
       ),
-      searchPlaceholder: i18next.t(
+      searchPlaceholder: t(
         LOCALIZATION.IMAGE_PICKER_SEARCH_PLACEHOLDER,
+        localization,
       ),
-      searchTabTitle: i18next.t(LOCALIZATION.IMAGE_PICKER_SEARCH_TAB_TITLE),
+      searchTabTitle: t(
+        LOCALIZATION.IMAGE_PICKER_SEARCH_TAB_TITLE,
+        localization,
+      ),
     };
 
     return (

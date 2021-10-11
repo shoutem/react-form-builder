@@ -1,1 +1,1 @@
-export { resolveResourceForm } from './resource-form';
+export { resolveForm } from './resource-form';

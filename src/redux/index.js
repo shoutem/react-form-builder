@@ -1,2 +1,3 @@
-export { default as formReducer } from './reducer';
-export { getFormState } from './selectors';
+export { default as reducer } from './reducer';
+export { resolveFormState } from './selectors';
+export { resetForm } from './actions';

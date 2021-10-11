@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import autoBindReact from 'auto-bind/react';
 import _ from 'lodash';
-import i18next from 'i18next';
 import { ControlLabel, FormGroup } from 'react-bootstrap';
 import { FontIcon } from '@shoutem/react-web-ui';
 import LOCALIZATION from '../../localization';
+import t from '../../i18n';
 import './style.scss';
 
 export default class ArrayFormElement extends Component {
@@ -15,6 +15,7 @@ export default class ArrayFormElement extends Component {
     name: PropTypes.string,
     field: PropTypes.object,
     ItemComponent: PropTypes.object,
+    localization: PropTypes.object,
   };
 
   constructor(props) {
@@ -47,7 +48,14 @@ export default class ArrayFormElement extends Component {
   }
 
   render() {
-    const { ItemComponent, name, elementId, field, ...otherProps } = this.props;
+    const {
+      ItemComponent,
+      name,
+      elementId,
+      field,
+      localization,
+      ...otherProps
+    } = this.props;
 
     return (
       <FormGroup className="array-form" controlId={elementId}>
@@ -67,7 +75,7 @@ export default class ArrayFormElement extends Component {
           <div className="add-more-container" onClick={this.handleAddField}>
             <FontIcon className="add-more-icon" name="add" size={25} />
             <div className="add-more-text">
-              {i18next.t(LOCALIZATION.ADD_MORE)}
+              {t(LOCALIZATION.ADD_MORE, localization)}
             </div>
           </div>
         </div>

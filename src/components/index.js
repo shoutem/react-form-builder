@@ -13,3 +13,5 @@ export { default as BooleanReduxFormElement } from './boolean-redux-form-element
 export { default as SectionForm } from './section-form';
 export { default as FormContainer } from './form-container';
 export { default as ColorReduxFormElement } from './color-redux-form-element';
+export { default as SelectReduxFormElement } from './select-redux-form-element';
+export { default as FontReduxFormElement } from './font-redux-form-element';

@@ -1,30 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
+import classNames from 'classnames';
 import { reduxForm } from 'redux-form';
-import { Button, ButtonToolbar, HelpBlock } from 'react-bootstrap';
-import { LoaderContainer } from '@shoutem/react-web-ui';
-import { getFormState } from '../../redux';
+import { resolveFormState } from '../../redux';
 import {
   resolveIsArrayPropertiesChanged,
   resolveSchemaElements,
   validateResourceForm,
   getFormPropertyKeys,
-  getEditorCreateConfirmButtonLabel,
-  getEditorUpdateConfirmButtonLabel,
-  getEditorCreateAbortButtonLabel,
-  getEditorUpdateAbortButtonLabel,
 } from '../../services';
 import './style.scss';
 
 function ResourceForm({
+  className,
   schema,
   canonicalName,
   assetManager,
   submitting,
   pristine,
   fields,
-  onCancel,
   touch,
   loadSchema,
   loadResources,
@@ -34,25 +29,10 @@ function ResourceForm({
   ownInitialValues,
   values,
   error,
+  localization,
+  renderHeader,
+  renderFooter,
 }) {
-  const id = _.get(fields, 'id');
-  const inEditMode = !_.isEmpty(id.value);
-
-  // needs to be calculated again, as error prop is not returing validation errors
-  // fixed in v6 redux-form, but we are using v5
-  const validationErrors = validateResourceForm(schema, values);
-
-  let disabled = submitting || pristine || !_.isEmpty(validationErrors);
-  if (disabled) {
-    // needs to be calculated manually, as touch or pristine don't work for arrays
-    // fixed in v6 redux-form, but we are using v5
-    disabled = !resolveIsArrayPropertiesChanged(
-      schema,
-      values,
-      ownInitialValues,
-    );
-  }
-
   const options = {
     assetManager,
     canonicalName,
@@ -61,41 +41,45 @@ function ResourceForm({
     touch,
     loadSchema,
     loadResources,
+    localization,
   };
+
+  // needs to be calculated again, as error prop is not returing validation errors
+  // fixed in v6 redux-form, but we are using v5
+  const validationErrors = validateResourceForm(schema, values, options);
+
+  // needs to be calculated manually, as touch or pristine don't work for arrays
+  // fixed in v6 redux-form, but we are using v5
+  const arrayChanged = resolveIsArrayPropertiesChanged(
+    schema,
+    values,
+    ownInitialValues,
+  );
+  const dirty = !pristine || arrayChanged;
+  const disabled = submitting || !dirty || !_.isEmpty(validationErrors);
+
   const elements = resolveSchemaElements(schema, fields, options);
+  const classes = classNames('resource-form', className);
+
+  const formProps = {
+    dirty,
+    disabled,
+    submitting,
+    error,
+    validationErrors,
+  };
 
   return (
-    <form className="resource-form" onSubmit={handleSubmit}>
+    <form className={classes} onSubmit={handleSubmit}>
+      {_.isFunction(renderHeader) && renderHeader(formProps)}
       {elements}
-      <ButtonToolbar>
-        <Button
-          bsSize="large"
-          bsStyle="primary"
-          disabled={disabled}
-          type="submit"
-        >
-          <LoaderContainer isLoading={submitting}>
-            {inEditMode
-              ? getEditorUpdateConfirmButtonLabel(schema)
-              : getEditorCreateConfirmButtonLabel(schema)}
-          </LoaderContainer>
-        </Button>
-        <Button bsSize="large" disabled={submitting} onClick={onCancel}>
-          {inEditMode
-            ? getEditorUpdateAbortButtonLabel(schema)
-            : getEditorCreateAbortButtonLabel(schema)}
-        </Button>
-      </ButtonToolbar>
-      {error && (
-        <div className="has-error">
-          <HelpBlock>{error}</HelpBlock>
-        </div>
-      )}
+      {_.isFunction(renderFooter) && renderFooter(formProps)}
     </form>
   );
 }
 
 ResourceForm.propTypes = {
+  className: PropTypes.func,
   schema: PropTypes.object,
   values: PropTypes.object,
   canonicalName: PropTypes.string,
@@ -110,19 +94,22 @@ ResourceForm.propTypes = {
   pristine: PropTypes.bool,
   submitting: PropTypes.bool,
   fields: PropTypes.object,
-  onCancel: PropTypes.func,
   error: PropTypes.string,
-  places: PropTypes.array,
+  renderHeader: PropTypes.func,
+  renderFooter: PropTypes.func,
+  localization: PropTypes.object,
 };
 
-export function resolveResourceForm(schema) {
-  const formKey = _.get(schema, 'name', 'resource');
+export function resolveForm(schema, options) {
   const propertyKeys = getFormPropertyKeys(schema);
+  const formKey = _.get(options, 'formKey') || 'resourceForm';
+  const reducerKey = _.get(options, 'reducerKey') || 'reactFormBuilder';
 
   return reduxForm({
-    getFormState,
+    getFormState: resolveFormState(reducerKey),
     form: formKey,
     fields: ['id', ...propertyKeys],
-    validate: resource => validateResourceForm(schema, resource),
+    validate: resource => validateResourceForm(schema, resource, options),
+    ...options,
   })(ResourceForm);
 }

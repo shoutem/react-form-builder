@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import autoBindReact from 'auto-bind/react';
-import i18next from 'i18next';
 import { SketchPicker } from 'react-color';
 import { FontIcon } from '@shoutem/react-web-ui';
 import _ from 'lodash';
 import colorString from 'color-string';
-import LOCALIZATION from './localization';
+import LOCALIZATION from '../../../localization';
+import t from '../../../i18n';
 import './style.scss';
 
 const DEFAULT_COLOR = '#fff';
@@ -37,14 +37,14 @@ function rgbObjectToArray(rgba) {
   ];
 }
 
-function createColorPickerText(color) {
+function createColorPickerText(color, localization) {
   if (!color) {
-    return i18next.t(LOCALIZATION.UNDEFINED_COLOR);
+    return t(LOCALIZATION.UNDEFINED_COLOR, localization);
   }
 
   const hexColor = colorString.to.hex(color);
   if (!hexColor) {
-    return i18next.t(LOCALIZATION.INVALID_COLOR);
+    return t(LOCALIZATION.INVALID_COLOR, localization);
   }
 
   const hexColorText = hexColor.substring(1);
@@ -59,16 +59,24 @@ function createColorPickerText(color) {
 }
 
 export default class ColorPicker extends Component {
+  static propTypes = {
+    value: PropTypes.any,
+    onChange: PropTypes.func.isRequired,
+    displayColorValue: PropTypes.bool,
+    localization: PropTypes.object,
+  };
+
+  static defaultProps = {
+    value: DEFAULT_COLOR,
+    displayColorValue: false,
+  };
+
   constructor(props) {
     super(props);
     autoBindReact(this);
 
-    const { value } = this.props;
-    const color = value || DEFAULT_COLOR;
-
     this.state = {
       displayColorPicker: false,
-      color: colorString.get.rgb(color),
     };
   }
 
@@ -85,12 +93,11 @@ export default class ColorPicker extends Component {
   }
 
   handleColorPickerChange(colorObj) {
-    const { onChange, name } = this.props;
+    const { onChange } = this.props;
     const color = rgbObjectToArray(colorObj.rgb);
-    this.setState({ color });
-
     const colorRgba = colorString.to.rgb(color);
-    onChange(colorRgba, name);
+
+    onChange(colorRgba);
   }
 
   handleColorPickerClose() {
@@ -119,9 +126,10 @@ export default class ColorPicker extends Component {
   }
 
   render() {
-    const { color } = this.state;
+    const { value, localization } = this.props;
 
-    const colorPickerText = createColorPickerText(color);
+    const color = colorString.get.rgb(value || DEFAULT_COLOR);
+    const colorPickerText = createColorPickerText(color, localization);
     const swatchColor = {
       backgroundColor: colorString.to.rgb(color),
     };
@@ -154,15 +162,3 @@ export default class ColorPicker extends Component {
     );
   }
 }
-
-ColorPicker.propTypes = {
-  name: PropTypes.string,
-  value: PropTypes.any,
-  onChange: PropTypes.func.isRequired,
-  displayColorValue: PropTypes.bool,
-};
-
-ColorPicker.defaultProps = {
-  value: DEFAULT_COLOR,
-  displayColorValue: false,
-};

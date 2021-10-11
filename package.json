@@ -1,5 +1,5 @@
 {
-  "name": "react-form-builder",
+  "name": "@shoutem/react-form-builder",
   "version": "1.0.0",
   "description": "React form builder for Shoutem",
   "main": "dist/index.js",
@@ -23,11 +23,11 @@
     "auto-bind": "^4.0.0",
     "classnames": "^2.2.6",
     "color-string": "^1.5.3",
-    "i18next": "^19.8.2",
     "lodash": "^4.17.19",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.32",
     "prop-types": "^15.7.2",
+    "react": "^16.12.0",
     "react-bootstrap": "^0.32.4",
     "react-color": "^2.18.0",
     "react-dropzone": "^3.7.4",
@@ -37,10 +37,6 @@
     "redux-form": "^5.4.0",
     "urijs": "^1.19.2",
     "validator": "^12.2.0"
-  },
-  "peerDependencies": {
-    "react": "^16.12.0",
-    "prop-types": "^15.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

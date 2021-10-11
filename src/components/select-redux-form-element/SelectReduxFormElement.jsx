@@ -30,7 +30,7 @@ export default class SelectReduxFormElement extends Component {
   handleSelectionChanged(newSelectedItem) {
     const { field, valueKey } = this.props;
     const value = _.get(newSelectedItem, valueKey);
-    field.onChange(value);
+    field.onChange(JSON.parse(value));
   }
 
   render() {
@@ -41,12 +41,19 @@ export default class SelectReduxFormElement extends Component {
       options,
       helpText,
       className,
+      valueKey,
       ...otherProps
     } = this.props;
 
     const classes = classNames('select-redux-form-element', className);
     const isError = fieldInError(field);
     const helpBlockText = isError ? field.error : helpText;
+
+    // converting to JSON to be able to handle object values
+    const jsonOptions = _.map(options, option => ({
+      ...option,
+      [valueKey]: JSON.stringify(option[valueKey]),
+    }));
 
     return (
       <FormGroup
@@ -57,8 +64,8 @@ export default class SelectReduxFormElement extends Component {
         {name && <ControlLabel>{name}</ControlLabel>}
         <Select
           onChange={this.handleSelectionChanged}
-          options={options}
-          value={field.value}
+          options={jsonOptions}
+          value={JSON.stringify(field.value)}
           {...otherProps}
         />
         {helpBlockText && <HelpBlock>{helpBlockText}</HelpBlock>}

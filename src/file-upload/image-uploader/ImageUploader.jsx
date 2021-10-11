@@ -4,12 +4,12 @@ import autoBindReact from 'auto-bind/react';
 import { HelpBlock } from 'react-bootstrap';
 import Dropzone from 'react-dropzone';
 import classNames from 'classnames';
-import i18next from 'i18next';
 import _ from 'lodash';
 import { LoaderContainer } from '@shoutem/react-web-ui';
-import ImageUploadPlaceholder from '../image-upload-placeholder';
+import t from '../../i18n';
+import LOCALIZATION from '../../localization';
 import ImagePreview from '../image-preview';
-import LOCALIZATION from './localization';
+import ImageUploadPlaceholder from '../image-upload-placeholder';
 import './style.scss';
 
 export default class ImageUploader extends Component {
@@ -37,17 +37,22 @@ export default class ImageUploader extends Component {
   }
 
   validateFileSize(file) {
-    const { maxFileSize } = this.props;
+    const { maxFileSize, localization } = this.props;
+
     if (file.size > maxFileSize) {
-      return i18next.t(LOCALIZATION.MAX_SIZE_MESSAGE, {
-        maxSize: maxFileSize / 1000000,
-      });
+      return t(LOCALIZATION.MAX_SIZE_MESSAGE, localization);
     }
+
     return null;
   }
 
   upload(file) {
-    const { assetManager, folderName, resolveFilename } = this.props;
+    const {
+      assetManager,
+      folderName,
+      resolveFilename,
+      localization,
+    } = this.props;
 
     return new Promise((resolve, reject) => {
       const fileSizeError = this.validateFileSize(file);
@@ -63,7 +68,7 @@ export default class ImageUploader extends Component {
       assetManager
         .uploadFile(resolvedPath, file)
         .then(resolve, () =>
-          reject(i18next.t(LOCALIZATION.UPLOAD_FAILED_MESSAGE)),
+          reject(t(LOCALIZATION.FILE_UPLOAD_FAILED_ERROR, localization)),
         );
     });
   }
@@ -91,12 +96,16 @@ export default class ImageUploader extends Component {
   }
 
   handleDropRejected() {
-    this.setState({ error: i18next.t(LOCALIZATION.FILE_REJECTED_MESSAGE) });
+    const { localization } = this.props;
+    this.setState({
+      error: t(LOCALIZATION.FILE_REJECTED_ERROR, localization),
+    });
   }
 
   handleDeleteFailed() {
+    const { localization } = this.props;
     this.setState({
-      error: i18next.t(LOCALIZATION.DELETE_FAILED_MESSAGE),
+      error: t(LOCALIZATION.FILE_DELETE_FAILED_ERROR, localization),
       inProgress: false,
     });
   }
@@ -273,6 +282,7 @@ ImageUploader.propTypes = {
    * Editor heigth
    */
   editorHeight: PropTypes.number,
+  localization: PropTypes.object,
 };
 
 ImageUploader.defaultProps = {

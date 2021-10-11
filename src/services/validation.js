@@ -1,31 +1,31 @@
 import { isURL } from 'validator';
 import _ from 'lodash';
-import i18next from 'i18next';
-import {
-  getEditorSections,
-  getSectionPropertyKey,
-  getSchemaProperty,
-} from './schema';
 import {
   PROPERTY_TYPES,
   PROPERTY_FORMATS,
   PROPERTY_REFERENCED_SCHEMAS,
 } from '../const';
+import t from '../i18n';
 import LOCALIZATION from '../localization';
+import {
+  getEditorSections,
+  getSectionPropertyKey,
+  getSchemaProperty,
+} from './schema';
 
-function validateRequiredField(fieldValue) {
+function validateRequiredField(fieldValue, localization) {
   if (!fieldValue) {
-    return i18next.t(LOCALIZATION.VALUE_REQUIRED_MESSAGE);
+    return t(LOCALIZATION.VALUE_REQUIRED_MESSAGE, localization);
   }
 
   return null;
 }
 
-function validateNumericField(fieldValue) {
+function validateNumericField(fieldValue, localization) {
   const numberValue = _.toNumber(fieldValue);
 
   if (_.isNaN(numberValue)) {
-    return i18next.t(LOCALIZATION.INVALID_NUMBER_MESSAGE);
+    return t(LOCALIZATION.INVALID_NUMBER_MESSAGE, localization);
   }
 
   return null;
@@ -51,19 +51,22 @@ function validateMaximumNumberField(fieldValue, maximum) {
   return null;
 }
 
-function validateMinLengthField(fieldValue, minLength) {
+function validateMinLengthField(fieldValue, minLength, localization) {
   const stringValue = _.toString(fieldValue);
 
+  // TODO min length
   if (!stringValue || stringValue.length < minLength) {
-    return i18next.t(LOCALIZATION.INVALID_MIN_LENGTH_MESSAGE, { minLength });
+    return t(LOCALIZATION.INVALID_MIN_LENGTH_MESSAGE, localization, {
+      minLength,
+    });
   }
 
   return null;
 }
 
-function validateUrl(fieldValue) {
+function validateUrl(fieldValue, localization) {
   if (fieldValue && !isURL(fieldValue)) {
-    return i18next.t(LOCALIZATION.INVALID_URL_MESSAGE);
+    return t(LOCALIZATION.INVALID_URL_MESSAGE, localization);
   }
 
   return null;
@@ -84,7 +87,8 @@ function validatePattern(fieldValue, pattern) {
   return null;
 }
 
-function validateProperty(schemaProperty, field) {
+function validateProperty(schemaProperty, field, options) {
+  const localization = _.get(options, 'localization');
   const minLength = _.get(schemaProperty, 'minLength');
   const pattern = _.get(schemaProperty, 'pattern');
   const required = _.get(schemaProperty, 'required');
@@ -100,7 +104,7 @@ function validateProperty(schemaProperty, field) {
           PROPERTY_REFERENCED_SCHEMAS.IMAGE_ATTACHMENT
       ) {
         const url = _.get(field, 'url');
-        const error = validateRequiredField(url);
+        const error = validateRequiredField(url, localization);
 
         if (error) {
           return error;
@@ -124,7 +128,7 @@ function validateProperty(schemaProperty, field) {
   }
 
   if (minLength) {
-    const error = validateMinLengthField(field, minLength);
+    const error = validateMinLengthField(field, minLength, localization);
     if (error) {
       return error;
     }
@@ -138,7 +142,7 @@ function validateProperty(schemaProperty, field) {
   }
 
   if (format === PROPERTY_FORMATS.URI && !pattern) {
-    const error = validateUrl(field);
+    const error = validateUrl(field, localization);
     if (error) {
       return error;
     }
@@ -148,7 +152,7 @@ function validateProperty(schemaProperty, field) {
     format === PROPERTY_FORMATS.INTEGER ||
     format === PROPERTY_FORMATS.NUMBER
   ) {
-    const error = validateNumericField(field);
+    const error = validateNumericField(field, localization);
     if (error) {
       return error;
     }
@@ -171,7 +175,7 @@ function validateProperty(schemaProperty, field) {
   return null;
 }
 
-export function validateResourceForm(schema, form) {
+export function validateResourceForm(schema, form, options) {
   const sections = getEditorSections(schema);
   const errors = {};
 
@@ -182,7 +186,7 @@ export function validateResourceForm(schema, form) {
 
       if (schemaProperty) {
         const field = _.get(form, propertyKey);
-        const error = validateProperty(schemaProperty, field);
+        const error = validateProperty(schemaProperty, field, options);
 
         if (error) {
           _.set(errors, propertyKey, error);

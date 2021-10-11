@@ -1,6 +1,4 @@
 import _ from 'lodash';
-import i18next from 'i18next';
-import LOCALIZATION from '../localization';
 
 export function getSchemaProperties(schema) {
   return _.get(schema, 'properties');
@@ -52,7 +50,8 @@ export function getEditorSize(schema) {
 }
 
 export function getEditorSections(schema) {
-  const sections = _.get(schema, 'editor.sections');
+  const sections =
+    _.get(schema, 'editor.sections') || _.get(schema, 'layout.sections');
 
   if (!_.isEmpty(sections)) {
     return sections;
@@ -84,50 +83,41 @@ export function getSchemaPropertyKeys(schema) {
   return _.keys(_.get(schema, 'properties'));
 }
 
-export function getEditorCreateTitle(schema) {
-  return _.get(
-    schema,
-    'editorCreate.title',
-    i18next.t(LOCALIZATION.EDITOR_CREATE_TITLE),
-  );
+export function getSchemaPropertyEnum(schema, propertyKey, valueKey) {
+  const schemaProperty = getSchemaProperty(schema, propertyKey);
+  const options = _.get(schemaProperty, ['constraints', valueKey, 'enum']);
+
+  if (options) {
+    return options;
+  }
+
+  const format = _.get(schemaProperty, 'format');
+  const globalOptions = _.get(schema, [
+    'formats',
+    format,
+    'contstraints',
+    valueKey,
+    'enum',
+  ]);
+
+  return globalOptions;
 }
 
-export function getEditorUpdateTitle(schema) {
-  return _.get(
-    schema,
-    'editorCreate.title',
-    i18next.t(LOCALIZATION.EDITOR_UPDATE_TITLE),
-  );
-}
+export function getSchemaPropertyContstraints(schema, propertyKey, valueKey) {
+  const schemaProperty = getSchemaProperty(schema, propertyKey);
+  const contstraints = _.get(schemaProperty, ['constraints', valueKey]);
 
-export function getEditorCreateConfirmButtonLabel(schema) {
-  return _.get(
-    schema,
-    'editorCreate.confirmButtonLabel',
-    i18next.t(LOCALIZATION.EDITOR_CREATE_CONFIRM_BUTTON_LABEL),
-  );
-}
+  if (contstraints) {
+    return contstraints;
+  }
 
-export function getEditorCreateAbortButtonLabel(schema) {
-  return _.get(
-    schema,
-    'editorCreate.abortButtonLabel',
-    i18next.t(LOCALIZATION.EDITOR_CREATE_ABORT_BUTTON_LABEL),
-  );
-}
+  const format = _.get(schemaProperty, 'format');
+  const globalContstraints = _.get(schema, [
+    'formats',
+    format,
+    'contstraints',
+    valueKey,
+  ]);
 
-export function getEditorUpdateConfirmButtonLabel(schema) {
-  return _.get(
-    schema,
-    'editorUpdate.confirmButtonLabel',
-    i18next.t(LOCALIZATION.EDITOR_UPDATE_CONFIRM_BUTTON_LABEL),
-  );
-}
-
-export function getEditorUpdateAbortButtonLabel(schema) {
-  return _.get(
-    schema,
-    'editorUpdate.abortButtonLabel',
-    i18next.t(LOCALIZATION.EDITOR_UPDATE_ABORT_BUTTON_LABEL),
-  );
+  return globalContstraints;
 }

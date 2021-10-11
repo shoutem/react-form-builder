@@ -4,9 +4,19 @@ import autoBindReact from 'auto-bind/react';
 import Uri from 'urijs';
 import classnames from 'classnames';
 import { FontIcon } from '@shoutem/react-web-ui';
+import t from '../../i18n';
+import LOCALIZATION from '../../localization';
 import './style.scss';
 
 export default class FilePreview extends React.Component {
+  static propTypes = {
+    src: PropTypes.string.isRequired,
+    className: PropTypes.string,
+    onDeleteClick: PropTypes.func,
+    canBeDeleted: PropTypes.bool,
+    localization: PropTypes.object,
+  };
+
   constructor(props) {
     super(props);
     autoBindReact(this);
@@ -17,9 +27,17 @@ export default class FilePreview extends React.Component {
   }
 
   render() {
-    const { src, className, canBeDeleted, onDeleteClick } = this.props;
+    const {
+      src,
+      className,
+      canBeDeleted,
+      onDeleteClick,
+      localization,
+    } = this.props;
 
-    const filename = src ? new Uri(src).filename() : 'No file.';
+    const filename = src
+      ? new Uri(src).filename()
+      : t(LOCALIZATION.NO_FILE, localization);
 
     const classes = classnames(className, 'file-preview', {
       'is-deletable': canBeDeleted,
@@ -42,22 +60,3 @@ export default class FilePreview extends React.Component {
     );
   }
 }
-
-FilePreview.propTypes = {
-  /**
-   * Valid url to the file
-   */
-  src: PropTypes.string.isRequired,
-  /**
-   * Additional classes to apply
-   */
-  className: PropTypes.string,
-  /**
-   * Click handler for delete icon
-   */
-  onDeleteClick: PropTypes.func,
-  /**
-   * Flag indicating whether file can be deleted
-   */
-  canBeDeleted: PropTypes.bool,
-};

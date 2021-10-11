@@ -6,6 +6,13 @@ import _ from 'lodash';
 import './style.scss';
 
 export default class ArrayReduxFormItem extends Component {
+  static propTypes = {
+    index: PropTypes.number,
+    field: PropTypes.object,
+    elementId: PropTypes.string,
+    onRemove: PropTypes.func,
+  };
+
   constructor(props) {
     super(props);
     autoBindReact(this);
@@ -41,10 +48,3 @@ export default class ArrayReduxFormItem extends Component {
     );
   }
 }
-
-ArrayReduxFormItem.propTypes = {
-  index: PropTypes.number,
-  field: PropTypes.object,
-  elementId: PropTypes.string,
-  onRemove: PropTypes.func,
-};

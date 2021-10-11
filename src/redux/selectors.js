@@ -1,5 +1,5 @@
 import _ from 'lodash';
 
-export function getFormState(state) {
-  return _.get(state, 'reactFormBuilder', {});
+export function resolveFormState(reducerKey) {
+  return state => _.get(state, reducerKey, {});
 }

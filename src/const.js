@@ -22,6 +22,8 @@ export const PROPERTY_FORMATS = {
   ENTITY_REFERENCE_ARRAY: 'entity-reference-array',
   ARRAY: 'array',
   BOOLEAN: 'boolean',
+  DROPDOWN: 'dropdown',
+  FONT: 'font',
 };
 
 export const PROPERTY_REFERENCED_SCHEMAS = {

@@ -6,6 +6,22 @@ import { FontIcon } from '@shoutem/react-web-ui';
 import './style.scss';
 
 export default class ImagePreview extends Component {
+  static propTypes = {
+    src: PropTypes.string.isRequired,
+    className: PropTypes.string,
+    onDeleteClick: PropTypes.func,
+    onPreviewClick: PropTypes.func,
+    canBeDeleted: PropTypes.bool,
+    canBePreviewed: PropTypes.bool,
+    width: PropTypes.string,
+    height: PropTypes.string,
+  };
+
+  static defaultProps = {
+    width: '200px',
+    height: '200px',
+  };
+
   constructor(props) {
     super(props);
     autoBindReact(this);
@@ -56,43 +72,3 @@ export default class ImagePreview extends Component {
     );
   }
 }
-
-ImagePreview.propTypes = {
-  /**
-   * Valid url to the file
-   */
-  src: PropTypes.string.isRequired,
-  /**
-   * Additional classes to apply
-   */
-  className: PropTypes.string,
-  /**
-   * Click handler for delete icon
-   */
-  onDeleteClick: PropTypes.func,
-  /**
-   * Click handler for preview icon
-   */
-  onPreviewClick: PropTypes.func,
-  /**
-   * Flag indicating whether file can be deleted
-   */
-  canBeDeleted: PropTypes.bool,
-  /**
-   * Flag indicating whether file can be previewed
-   */
-  canBePreviewed: PropTypes.bool,
-  /**
-   * Preview width
-   */
-  width: PropTypes.string,
-  /**
-   * Preview height
-   */
-  height: PropTypes.string,
-};
-
-ImagePreview.defaultProps = {
-  width: '200px',
-  height: '200px',
-};

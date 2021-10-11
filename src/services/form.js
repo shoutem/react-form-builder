@@ -1,6 +1,5 @@
 import _ from 'lodash';
 import React from 'react';
-import i18next from 'i18next';
 import { ReduxFormElement } from '@shoutem/react-web-ui';
 import {
   GalleryReduxFormElement,
@@ -16,6 +15,8 @@ import {
   EntityReferenceReduxFormElement,
   BooleanReduxFormElement,
   ColorReduxFormElement,
+  FontReduxFormElement,
+  SelectReduxFormElement,
   FormContainer,
   SectionForm,
 } from '../components';
@@ -24,6 +25,7 @@ import {
   PROPERTY_FORMATS,
   PROPERTY_REFERENCED_SCHEMAS,
 } from '../const';
+import t from '../i18n';
 import LOCALIZATION from '../localization';
 import {
   getEditorSize,
@@ -31,7 +33,15 @@ import {
   getSchemaPropertyKeys,
   getSchemaProperty,
   getSectionPropertyKey,
+  getSchemaPropertyEnum,
+  getSchemaPropertyContstraints,
 } from './schema';
+
+export function resolveObjectOptions(options, valueKey) {
+  return _.map(options, option => {
+    return { value: { [valueKey]: option }, label: _.startCase(option) };
+  });
+}
 
 export function resolveTimezoneKey(key) {
   return `${key}TimezoneId`;
@@ -177,6 +187,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
     return null;
   }
 
+  const localization = _.get(options, 'localization');
   const propertyField = _.get(fields, propertyKey);
 
   if (
@@ -188,6 +199,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       elementId: propertyKey,
       field: propertyField,
       name: schemaProperty.title,
+      localization,
     };
     return resolveReactComponent(ArrayFormElement, props);
   }
@@ -203,6 +215,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       name: schemaProperty.title,
       maxLength: schemaProperty.maxLength,
       unsplashAccessKey: options.unsplashAccessKey,
+      localization,
     };
     return resolveReactComponent(ArrayFormElement, props);
   }
@@ -215,6 +228,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       elementId: propertyKey,
       field: propertyField,
       name: schemaProperty.title,
+      localization,
     };
     return resolveReactComponent(ColorReduxFormElement, props);
   }
@@ -227,6 +241,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
         name: schemaProperty.title,
         maxLength: schemaProperty.maxLength,
         unsplashAccessKey: options.unsplashAccessKey,
+        localization,
       };
       return resolveReactComponent(TextEditorReduxFormElement, props);
     }
@@ -237,6 +252,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
         field: propertyField,
         name: schemaProperty.title,
         maxLength: schemaProperty.maxLength,
+        localization,
       };
       return resolveReactComponent(TextAreaReduxFormElement, props);
     }
@@ -247,8 +263,59 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       name: schemaProperty.title,
       maxLength: schemaProperty.maxLength,
       enableEmojiPicker: true,
+      localization,
     };
     return resolveReactComponent(ReduxFormElement, props);
+  }
+
+  if (
+    schemaProperty.type === PROPERTY_TYPES.OBJECT &&
+    schemaProperty.format === PROPERTY_FORMATS.DROPDOWN
+  ) {
+    const valueKey = 'dropdownValue';
+    const enumOptions = getSchemaPropertyEnum(schema, propertyKey, valueKey);
+    const props = {
+      elementId: propertyKey,
+      field: propertyField,
+      name: schemaProperty.title,
+      options: resolveObjectOptions(enumOptions, valueKey),
+      clearable: false,
+      localization,
+    };
+    return resolveReactComponent(SelectReduxFormElement, props);
+  }
+
+  if (
+    schemaProperty.type === PROPERTY_TYPES.OBJECT &&
+    schemaProperty.format === PROPERTY_FORMATS.FONT
+  ) {
+    const props = {
+      elementId: propertyKey,
+      field: propertyField,
+      name: schemaProperty.title,
+      localization,
+      fontFamilyOptions: getSchemaPropertyContstraints(
+        schema,
+        propertyKey,
+        'fontFamily',
+      ),
+      fontStyleOptions: getSchemaPropertyContstraints(
+        schema,
+        propertyKey,
+        'fontStyle',
+      ),
+      fontWeightOptions: getSchemaPropertyContstraints(
+        schema,
+        propertyKey,
+        'fontWeight',
+      ),
+      fontSizeContstraints: getSchemaPropertyContstraints(
+        schema,
+        propertyKey,
+        'fontSize',
+      ),
+    };
+    return resolveReactComponent(FontReduxFormElement, props);
   }
 
   if (
@@ -265,6 +332,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       folderName: options.canonicalName,
       editorWidth: sectionProperty.width,
       editorHeight: sectionProperty.height,
+      localization,
     };
     return resolveReactComponent(GalleryReduxFormElement, props);
   }
@@ -283,6 +351,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       folderName: options.canonicalName,
       editorWidth: sectionProperty.width,
       editorHeight: sectionProperty.height,
+      localization,
     };
     return resolveReactComponent(ImageUploaderReduxFormElement, props);
   }
@@ -297,10 +366,11 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       elementId: propertyKey,
       field: propertyField,
       name: schemaProperty.title,
-      thumbnailName: i18next.t(LOCALIZATION.VIDEO_THUMBNAIL),
+      thumbnailName: t(LOCALIZATION.VIDEO_THUMBNAIL, localization),
       touch: options.touch,
       assetManager: options.assetManager,
       folderName: options.canonicalName,
+      localization,
     };
     return resolveReactComponent(VideoUploaderReduxFormElement, props);
   }
@@ -313,15 +383,21 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       elementId: propertyKey,
       field: propertyField,
       name: schemaProperty.title,
-      placeholder: i18next.t(LOCALIZATION.GEOLOCATION_EMPTY_PLACEHOLDER_LABEL),
-      latitudeName: `${schemaProperty.title} - ${i18next.t(
+      placeholder: t(
+        LOCALIZATION.GEOLOCATION_EMPTY_PLACEHOLDER_LABEL,
+        localization,
+      ),
+      latitudeName: `${schemaProperty.title} - ${t(
         LOCALIZATION.GEOLOCATION_LATITUDE_LABEL,
+        localization,
       )}`,
-      longitudeName: `${schemaProperty.title} - ${i18next.t(
+      longitudeName: `${schemaProperty.title} - ${t(
         LOCALIZATION.GEOLOCATION_LONGITUDE_LABEL,
+        localization,
       )}`,
       googleApiKey: options.googleApiKey,
       touch: options.touch,
+      localization,
     };
     return resolveReactComponent(GeolocationReduxFormElement, props);
   }
@@ -339,8 +415,9 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       field: propertyField,
       timezoneField,
       name: schemaProperty.title,
-      timezoneName: i18next.t(LOCALIZATION.DATE_TIME_TIMEZONE_LABEL),
+      timezoneName: t(LOCALIZATION.DATE_TIME_TIMEZONE_LABEL, localization),
       touch: options.touch,
+      localization,
     };
     return resolveReactComponent(DateTimeReduxFormElement, props);
   }
@@ -354,6 +431,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       field: propertyField,
       name: schemaProperty.title,
       maxLength: schemaProperty.maxLength,
+      localization,
     };
     return resolveReactComponent(ReduxFormElement, props);
   }
@@ -366,6 +444,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       elementId: propertyKey,
       field: propertyField,
       name: schemaProperty.title,
+      localization,
     };
     return resolveReactComponent(BooleanReduxFormElement, props);
   }
@@ -379,6 +458,7 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       field: propertyField,
       name: schemaProperty.title,
       maxLength: schemaProperty.maxLength,
+      localization,
     };
     return resolveReactComponent(ReduxFormElement, props);
   }
@@ -394,8 +474,12 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       canonicalName: schemaProperty.referencedSchema,
       loadSchema: options.loadSchema,
       loadResources: options.loadResources,
-      placeholder: i18next.t(LOCALIZATION.ENTITY_REFERENCE_PLACEHOLDER_LABEL),
+      placeholder: t(
+        LOCALIZATION.ENTITY_REFERENCE_PLACEHOLDER_LABEL,
+        localization,
+      ),
       touch: options.touch,
+      localization,
     };
     return resolveReactComponent(EntityReferenceReduxFormElement, props);
   }
