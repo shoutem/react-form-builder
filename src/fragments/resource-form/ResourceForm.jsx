@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
-import classNames from 'classnames';
 import { reduxForm } from 'redux-form';
 import { resolveFormState } from '../../redux';
 import {
@@ -10,7 +9,6 @@ import {
   validateResourceForm,
   getFormPropertyKeys,
 } from '../../services';
-import './style.scss';
 
 function ResourceForm({
   className,
@@ -59,7 +57,6 @@ function ResourceForm({
   const disabled = submitting || !dirty || !_.isEmpty(validationErrors);
 
   const elements = resolveSchemaElements(schema, fields, options);
-  const classes = classNames('resource-form', className);
 
   const formProps = {
     dirty,
@@ -70,7 +67,7 @@ function ResourceForm({
   };
 
   return (
-    <form className={classes} onSubmit={handleSubmit}>
+    <form className={className} onSubmit={handleSubmit}>
       {_.isFunction(renderHeader) && renderHeader(formProps)}
       {elements}
       {_.isFunction(renderFooter) && renderFooter(formProps)}
