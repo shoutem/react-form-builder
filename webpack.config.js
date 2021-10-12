@@ -1,4 +1,5 @@
 const path = require('path');
+const pkg = require('./package.json');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
@@ -8,7 +9,7 @@ module.exports = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
-    library: '',
+    library: pkg.name,
     libraryTarget: 'commonjs',
   },
   plugins: [new CleanWebpackPlugin()],
@@ -27,7 +28,7 @@ module.exports = {
     ],
   },
   resolve: {
-    modules: [path.join(__dirname, '../..'), 'node_modules'],
+    modules: ['src', 'node_modules'],
     extensions: ['.js', '.jsx', '.json', '.css', '.sass', '.scss', '.html'],
   },
 };
