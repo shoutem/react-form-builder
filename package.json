@@ -1,12 +1,12 @@
 {
   "name": "@shoutem/react-form-builder",
-  "version": "1.0.0-rc.4",
+  "version": "1.0.0-rc.5",
   "description": "React form builder for Shoutem",
   "author": "Shoutem",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://damirjuretic@github.com/shoutem/react-form-builder.git"
+    "url": "git+https://shoutem@github.com/shoutem/react-form-builder.git"
   },
   "bugs": {
     "url": "https://github.com/shoutem/react-form-builder/issues"
