@@ -39,9 +39,8 @@ export default class FileUploader extends React.Component {
   validateFileSize(file) {
     const { maxFileSize, localization } = this.props;
 
-    // TODO maxFileSize
     if (file.size > maxFileSize) {
-      return t(LOCALIZATION.FILE_MAX_SIZE_ERROR, localization);
+      return t(LOCALIZATION.FILE_MAX_SIZE_ERROR, localization, { maxFileSize });
     }
     return null;
   }

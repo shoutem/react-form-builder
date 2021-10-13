@@ -54,7 +54,6 @@ function validateMaximumNumberField(fieldValue, maximum) {
 function validateMinLengthField(fieldValue, minLength, localization) {
   const stringValue = _.toString(fieldValue);
 
-  // TODO min length
   if (!stringValue || stringValue.length < minLength) {
     return t(LOCALIZATION.INVALID_MIN_LENGTH_MESSAGE, localization, {
       minLength,
