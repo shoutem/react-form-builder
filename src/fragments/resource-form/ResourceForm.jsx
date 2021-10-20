@@ -105,7 +105,7 @@ export function resolveForm(schema, options) {
   return reduxForm({
     getFormState: resolveFormState(reducerKey),
     form: formKey,
-    fields: ['id', ...propertyKeys],
+    fields: [...propertyKeys],
     validate: resource => validateResourceForm(schema, resource, options),
     ...options,
   })(ResourceForm);
