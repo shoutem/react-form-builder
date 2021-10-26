@@ -95,7 +95,7 @@ export function getSchemaPropertyEnum(schema, propertyKey, valueKey) {
   const globalOptions = _.get(schema, [
     'formats',
     format,
-    'contstraints',
+    'constraints',
     valueKey,
     'enum',
   ]);
