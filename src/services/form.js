@@ -101,8 +101,6 @@ export function mapViewToModel(schema, resource) {
     return model;
   }
 
-  _.set(model, 'id', _.get(resource, 'id'));
-
   _.forOwn(schema.properties, (value, key) => {
     const resourceValue = _.get(resource, key);
     const propertyType = _.get(value, 'type');
@@ -156,8 +154,6 @@ export function mapModelToView(schema, resource) {
   if (!schema) {
     return view;
   }
-
-  _.set(view, 'id', _.get(resource, 'id'));
 
   _.forOwn(schema.properties, (value, key) => {
     const resourceValue = _.get(resource, key);
@@ -282,6 +278,10 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       elementId: propertyKey,
       field: propertyField,
       name: propertyTitle,
+      placeholder: t(
+        LOCALIZATION.DROPDOWN_EMPTY_PLACEHOLDER_LABEL,
+        localization,
+      ),
       options: resolveObjectOptions(enumOptions, valueKey, localization),
       clearable: false,
       localization,

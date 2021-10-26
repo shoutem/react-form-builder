@@ -31,6 +31,7 @@ const INVALID_NUMBER_MESSAGE = `${key}.invalid-number-message`;
 const INVALID_MIN_LENGTH_MESSAGE = `${key}.invalid-min-length-message`;
 const INVALID_URL_MESSAGE = `${key}.invalid-url-message`;
 const NO_FILE = `${key}.no-file`;
+const DROPDOWN_EMPTY_PLACEHOLDER_LABEL = `${key}.dropdown-empty-placeholder-label`;
 
 export default {
   ADD_MORE,
@@ -64,4 +65,5 @@ export default {
   UNDEFINED_COLOR,
   INVALID_COLOR,
   NO_FILE,
+  DROPDOWN_EMPTY_PLACEHOLDER_LABEL,
 };

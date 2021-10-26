@@ -30,6 +30,7 @@
     "invalid-number-message": "Value must be numeric",
     "invalid-min-length-message": "Minimum {{minLength}} characters required",
     "invalid-url-message": "Invalid URL provided",
-    "no-file": "No file."
+    "no-file": "No file.",
+    "dropdown-empty-placeholder-label": "Select"
   }
 }

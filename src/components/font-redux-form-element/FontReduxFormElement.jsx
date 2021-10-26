@@ -5,6 +5,7 @@ import { FormGroup, ControlLabel, HelpBlock } from 'react-bootstrap';
 import _ from 'lodash';
 import Select from 'react-select';
 import t from '../../i18n';
+import LOCALIZATION from '../../localization';
 import { BaseColorPicker } from '../color-redux-form-element';
 import { fieldInError } from '../services';
 import {
@@ -94,13 +95,17 @@ export default class FontReduxFormElement extends Component {
   }
 
   renderSelector(valueKey, options, size) {
-    const { field } = this.props;
+    const { field, localization } = this.props;
 
     return (
       <FormGroup style={{ flex: size, paddingRight: 24 }}>
         <Select
           value={_.get(field, ['value', valueKey])}
           onChange={value => this.handleChange(value, valueKey)}
+          placeholder={t(
+            LOCALIZATION.DROPDOWN_EMPTY_PLACEHOLDER_LABEL,
+            localization,
+          )}
           options={options}
           clearable={false}
         />
