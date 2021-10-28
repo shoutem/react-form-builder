@@ -79,12 +79,9 @@ export default class FontReduxFormElement extends Component {
     };
   }
 
-  handleFontChange(selected, controlName) {
-    this.setState({ [controlName]: selected.value });
-  }
-
-  handleChange(value, valueKey) {
+  handleChange(item, valueKey) {
     const { field } = this.props;
+    const value = _.get(item, 'value');
 
     const newValue = {
       ...field.value,
