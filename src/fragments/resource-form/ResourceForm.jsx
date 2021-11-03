@@ -1,3 +1,4 @@
+import '@shoutem/react-web-ui/lib/styles/index.scss';
 import React from 'react';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
