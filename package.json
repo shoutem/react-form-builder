@@ -1,6 +1,6 @@
 {
   "name": "@shoutem/react-form-builder",
-  "version": "1.0.0-rc.12",
+  "version": "1.0.0",
   "description": "React form builder for Shoutem",
   "author": "Shoutem",
   "license": "MIT",
@@ -28,7 +28,7 @@
     "lint": "eslint --no-eslintrc -c .eslintrc src/**/*.{js,jsx}"
   },
   "dependencies": {
-    "@shoutem/react-web-ui": "0.16.2-rc.0",
+    "@shoutem/react-web-ui": "^0.16.3",
     "auto-bind": "^4.0.0",
     "classnames": "^2.2.6",
     "color-string": "^1.5.3",
