@@ -41,7 +41,7 @@ export function resolveObjectOptions(options, valueKey, localization) {
   return _.map(options, option => {
     return {
       value: { [valueKey]: option },
-      label: _.startCase(t(option, localization)),
+      label: _.upperFirst(t(option, localization)),
     };
   });
 }

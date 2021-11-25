@@ -23,7 +23,7 @@ function generateSelectOptions(constraints, localization) {
 
   return _.map(options, option => ({
     value: option,
-    label: _.startCase(t(option, localization)),
+    label: _.upperFirst(t(option, localization)),
   }));
 }
 
