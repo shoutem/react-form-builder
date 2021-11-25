@@ -91,6 +91,16 @@ export default class FontReduxFormElement extends Component {
     field.onChange(newValue);
   }
 
+  handleColorChange(color) {
+    const { field } = this.props;
+    const newValue = {
+      ...field.value,
+      color,
+    };
+
+    field.onChange(newValue);
+  }
+
   renderSelector(valueKey, options, size) {
     const { field, localization } = this.props;
 
@@ -136,7 +146,7 @@ export default class FontReduxFormElement extends Component {
           {this.renderSelector('fontSize', fontSizeOptions, 1)}
           <FormGroup>
             <BaseColorPicker
-              onChange={value => this.handleChange(value, 'color')}
+              onChange={this.handleColorChange}
               value={_.get(field, 'value.color')}
             />
           </FormGroup>
