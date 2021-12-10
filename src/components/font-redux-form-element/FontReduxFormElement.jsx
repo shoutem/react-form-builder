@@ -47,9 +47,9 @@ export default class FontReduxFormElement extends Component {
 
     const {
       fontSizeContstraints,
-      fontFamilyContstraints,
-      fontStyleContstraints,
-      fontWeightContstraints,
+      fontFamilyOptions,
+      fontStyleOptions,
+      fontWeightOptions,
       localization,
     } = props;
 
@@ -64,15 +64,15 @@ export default class FontReduxFormElement extends Component {
 
     this.state = {
       fontFamilyOptions: generateSelectOptions(
-        fontFamilyContstraints || FONT_FAMILY_OPTIONS,
+        fontFamilyOptions || FONT_FAMILY_OPTIONS,
         localization,
       ),
       fontStyleOptions: generateSelectOptions(
-        fontStyleContstraints || FONT_STYLE_OPTIONS,
+        fontStyleOptions || FONT_STYLE_OPTIONS,
         localization,
       ),
       fontWeightOptions: generateSelectOptions(
-        fontWeightContstraints || FONT_WEIGHT_OPTIONS,
+        fontWeightOptions || FONT_WEIGHT_OPTIONS,
         localization,
       ),
       fontSizeOptions: generateSelectOptions(fontSizeValues, localization),
