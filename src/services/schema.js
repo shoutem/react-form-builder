@@ -103,21 +103,21 @@ export function getSchemaPropertyEnum(schema, propertyKey, valueKey) {
   return globalOptions;
 }
 
-export function getSchemaPropertyContstraints(schema, propertyKey, valueKey) {
+export function getSchemaPropertyConstraints(schema, propertyKey, valueKey) {
   const schemaProperty = getSchemaProperty(schema, propertyKey);
-  const contstraints = _.get(schemaProperty, ['constraints', valueKey]);
+  const constraints = _.get(schemaProperty, ['constraints', valueKey]);
 
-  if (contstraints) {
-    return contstraints;
+  if (constraints) {
+    return constraints;
   }
 
   const format = _.get(schemaProperty, 'format');
-  const globalContstraints = _.get(schema, [
+  const globalConstraints = _.get(schema, [
     'formats',
     format,
-    'contstraints',
+    'constraints',
     valueKey,
   ]);
 
-  return globalContstraints;
+  return globalConstraints;
 }

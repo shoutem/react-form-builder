@@ -34,7 +34,7 @@ import {
   getSchemaProperty,
   getSectionPropertyKey,
   getSchemaPropertyEnum,
-  getSchemaPropertyContstraints,
+  getSchemaPropertyConstraints,
 } from './schema';
 
 export function resolveObjectOptions(options, valueKey, localization) {
@@ -298,22 +298,22 @@ export function resolveFormElement(sectionProperty, schema, fields, options) {
       field: propertyField,
       name: propertyTitle,
       localization,
-      fontFamilyOptions: getSchemaPropertyContstraints(
+      fontFamilyOptions: getSchemaPropertyConstraints(
         schema,
         propertyKey,
         'fontFamily',
       ),
-      fontStyleOptions: getSchemaPropertyContstraints(
+      fontStyleOptions: getSchemaPropertyConstraints(
         schema,
         propertyKey,
         'fontStyle',
       ),
-      fontWeightOptions: getSchemaPropertyContstraints(
+      fontWeightOptions: getSchemaPropertyConstraints(
         schema,
         propertyKey,
         'fontWeight',
       ),
-      fontSizeContstraints: getSchemaPropertyContstraints(
+      fontSizeConstraints: getSchemaPropertyConstraints(
         schema,
         propertyKey,
         'fontSize',

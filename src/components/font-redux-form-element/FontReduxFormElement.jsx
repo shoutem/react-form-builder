@@ -37,7 +37,7 @@ export default class FontReduxFormElement extends Component {
     fontStyleOptions: PropTypes.array,
     fontWeightOptions: PropTypes.array,
     fontSizeOptions: PropTypes.array,
-    fontSizeContstraints: PropTypes.object,
+    fontSizeConstraints: PropTypes.object,
     localization: PropTypes.object,
   };
 
@@ -46,17 +46,17 @@ export default class FontReduxFormElement extends Component {
     autoBindReact(this);
 
     const {
-      fontSizeContstraints,
+      fontSizeConstraints,
       fontFamilyOptions,
       fontStyleOptions,
       fontWeightOptions,
       localization,
     } = props;
 
-    const minFontSize = _.get(fontSizeContstraints, 'minimum', MIN_FONT_SIZE);
-    const maxFontSize = _.get(fontSizeContstraints, 'maximum', MAX_FONT_SIZE);
+    const minFontSize = _.get(fontSizeConstraints, 'minimum', MIN_FONT_SIZE);
+    const maxFontSize = _.get(fontSizeConstraints, 'maximum', MAX_FONT_SIZE);
     const fontSizeStep = _.get(
-      fontSizeContstraints,
+      fontSizeConstraints,
       'fontSizeStep',
       FONT_SIZE_STEP,
     );
