@@ -38,16 +38,16 @@
     "react-bootstrap": "^0.32.4",
     "react-color": "^2.18.0",
     "react-dropzone": "^3.7.4",
+    "react-redux": "^7.2.4",
     "react-select": "^1.0.0-rc.5",
+    "redux": ">=4.0.5",
+    "redux-form": "^5.4.0",
     "urijs": "^1.19.2",
     "validator": "^12.2.0"
   },
   "peerDependencies": {
-    "@shoutem/react-web-ui": "^1.0.2",
-    "react": "^16.12.0",
-    "redux": "^4.0.5",
-    "react-redux": "^5.0.0",
-    "redux-form": "^5.4.0"
+    "@shoutem/react-web-ui": ">=0.16.6",
+    "react": ">=16.12.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.16.0",
